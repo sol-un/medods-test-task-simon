@@ -1,5 +1,6 @@
-# medods-test-task
+# Simon Says
 
+This is the game Simon Says developed in Vue as a test task for the company MEDODS. The app is available at https://sol-un.github.io/medods-test-task-simon/
 ## Project setup
 ```
 npm install

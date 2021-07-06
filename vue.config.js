@@ -1,4 +1,6 @@
 module.exports = {
-  publicPath: "/medods-test-task-simon/",
-  outputDir: "docs",
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/medods-test-task-simon/'
+    : '/',
+  outputDir: 'docs',
 };

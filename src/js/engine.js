@@ -76,7 +76,6 @@ export default {
     },
     
     invokeNextRound(difficulty) {
-      this.gameState = "simonTurn";
       if (difficulty) {
         this.span = this.difficulties[difficulty];
       }
@@ -84,6 +83,7 @@ export default {
         this.gameState = 'win';
         return;
       }
+      this.gameState = "simonTurn";
       this.input = [];
       this.round += 1;
       this.sequence.push(getRandomTileId());
