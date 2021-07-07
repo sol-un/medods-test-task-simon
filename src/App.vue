@@ -9,7 +9,7 @@
     <Header />
     <div class="ui-container">
       {{ this.message }}
-      <Form @start-game="invokeNextRound" />
+      <Form @start-game="playRound" />
     </div>
     <div class="field-container">
       <Tile
@@ -18,7 +18,7 @@
         :id="`tile-${tile.id}`"
         :key="tile.id"
         :color="tile.color"
-        @click="handleTileClick(tile.id)"
+        @click="this.gameState === 'playerTurn' && handleTileClick(tile.id)"
       />
     </div>
   </div>

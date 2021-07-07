@@ -1,5 +1,3 @@
-const getRandomTileId = () => Math.floor(Math.random() * tiles.length);
-
 const tiles = [
   {
     id: 0,
@@ -19,50 +17,45 @@ const tiles = [
   },
 ];
 
-const difficulties = {
-  // NOTE: span in ms between the tiles lighting up (a tile stays lit for 300 ms)
-  easy: 1800,
-  normal: 1300,
-  hard: 700,
-};
+export const settings = {
+  roundsToWin: 15,
+  lightUpDuration: 300,
+  pauseDuration: 1500,
+  levels: {
+    // NOTE: span in ms between the tiles lighting up, as lightUpDuration for the tiles is set to 300 ms
+    easy: 1800,
+    normal: 1300,
+    hard: 700,
+  }
+}
 
 export default {
   data() { 
       return {
+      ...settings,
       tiles,
-      gameState: "idle", // NOTE: other possible values are 'simonTurn', 'playerTurn', 'gameOver', 'win'
-      difficulties, 
+      gameState: "idle", // NOTE: other possible values are 'simonTurn', 'playerTurn', 'pause', 'gameOver', 'win'
       sequence: [],
       input: [],
       round: 0,
-      roundsToWin: 15,
       message: null,
     }
   },
   methods: {
     handleTileClick(id) {
-      if (this.gameState !== 'playerTurn') {
-        return;
-      }
       this.lightUp(id);
       this.input.push(id);
+      
+      if (this.input.length >= this.sequence.length) {
+        this.gameState = "pause";
+        setTimeout(() => this.playRound(), this.pauseDuration)
+      }
+
       const index = this.input.length - 1;
       if (this.input[index] !== this.sequence[index]) {
         this.gameState = "gameOver";
         return;
       }
-      if (this.input.length >= this.sequence.length) {
-        setTimeout(() => this.invokeNextRound() , 1000)
-      }
-    },
-
-    playRound() {
-      const { sequence } = this;
-      sequence.forEach((id, index) => {
-        setTimeout(() => {
-          this.lightUp(id);
-        }, (index + 1) * this.span);
-      });
     },
 
     lightUp(id) {
@@ -72,27 +65,38 @@ export default {
       tile.opacity = 0.5;
       tone.play();
 
-      setTimeout(() => (tile.opacity = 1), 300);
+      setTimeout(() => {
+        tile.opacity = 1
+      }, this.lightUpDuration);
     },
     
-    invokeNextRound(difficulty) {
-      if (difficulty) {
-        this.span = this.difficulties[difficulty];
+    playRound(level) {
+      if (level) {
+        this.span = this.levels[level];
       }
+
       if (this.sequence.length === this.roundsToWin) {
         this.gameState = 'win';
         return;
       }
+
       this.gameState = "simonTurn";
       this.input = [];
       this.round += 1;
-      this.sequence.push(getRandomTileId());
+      this.sequence.push(this.getRandomTileId());
       
-      this.playRound();
-      
+      this.sequence.forEach((id, index) => {
+        setTimeout(() => {
+          this.lightUp(id);
+        }, (index + 1) * this.span);
+      });      
+
       setTimeout(() => {
         this.gameState = "playerTurn";
-      }, this.round * this.span + 1000);
+      }, this.round * this.span + this.pauseDuration);
+    },
+    getRandomTileId() {
+      return Math.floor(Math.random() * tiles.length);
     },
   },
   watch: {
@@ -103,6 +107,9 @@ export default {
           break;
         case 'playerTurn':
           this.message = `(Round ${this.round}/${this.roundsToWin}) Your turn:`;
+          break;
+        case 'pause':
+          this.message = `(Round ${this.round}/${this.roundsToWin}) Great job!`;
           break;
         case 'win':
          this.message = "You win! Refresh the page (F5) to try again.";

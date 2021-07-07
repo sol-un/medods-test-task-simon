@@ -1,14 +1,9 @@
 <template>
   <div class="list-container" v-if="!hidden">
-    <label for="difficulty">Difficulty: </label>
-    <select id="difficulty" v-model="selected">
-      <option
-        v-for="difficulty in difficulties"
-        :key="difficulty"
-        :value="difficulty"
-        :selected="difficulty === selected"
-      >
-        {{ difficulty }}
+    <label for="level">Level: </label>
+    <select id="level" v-model="selected">
+      <option v-for="level in levels" :key="level" :value="level">
+        {{ level }}
       </option>
     </select>
   </div>
@@ -24,6 +19,11 @@
 </template>
 
 <script>
+import { settings } from "../js/engine.js";
+
+const levels = Object.keys(settings.levels);
+const [, normal] = levels;
+
 export default {
   name: "Form",
   emits: ["start-game"],
@@ -35,8 +35,8 @@ export default {
   data() {
     return {
       hidden: false,
-      selected: "normal",
-      difficulties: ["easy", "normal", "hard"],
+      selected: normal,
+      levels,
     };
   },
 };
@@ -45,7 +45,7 @@ export default {
 <style scoped>
 .list-container {
   position: absolute;
-  left: -67px;
+  left: -54px;
   top: -25px;
   box-sizing: border-box;
   width: max-content;
