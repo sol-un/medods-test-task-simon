@@ -18,7 +18,7 @@
         :id="`tile-${tile.id}`"
         :key="tile.id"
         :color="tile.color"
-        @click="this.gameState === 'playerTurn' && handleTileClick(tile.id)"
+        @click="handleTileClick(tile.id)"
       />
     </div>
   </div>

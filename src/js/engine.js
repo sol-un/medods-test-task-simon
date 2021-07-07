@@ -43,6 +43,10 @@ export default {
   },
   methods: {
     handleTileClick(id) {
+      if (this.gameState !== 'playerTurn' ) {
+        return;
+      }
+
       this.lightUp(id);
       this.input.push(id);
       
@@ -71,13 +75,17 @@ export default {
     },
     
     playRound(level) {
-      if (level) {
-        this.span = this.levels[level];
+      if (this.gameState === 'gameOver') {
+        return;
       }
 
       if (this.sequence.length === this.roundsToWin) {
         this.gameState = 'win';
         return;
+      }
+      
+      if (level) {
+        this.span = this.levels[level];
       }
 
       this.gameState = "simonTurn";
