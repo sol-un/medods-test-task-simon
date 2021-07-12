@@ -1,5 +1,5 @@
 <template>
-  <div class="list-container" v-if="!hidden">
+  <div class="list-container" v-if="show">
     <label for="level">Level: </label>
     <select id="level" v-model="selected">
       <option v-for="level in levels" :key="level" :value="level">
@@ -8,7 +8,7 @@
     </select>
   </div>
   <button
-    v-if="!hidden"
+    v-if="show"
     @click="
       $emit('start-game', selected);
       hideUi();
@@ -29,12 +29,12 @@ export default {
   emits: ["start-game"],
   methods: {
     hideUi() {
-      this.hidden = true;
+      this.show = false;
     },
   },
   data() {
     return {
-      hidden: false,
+      show: true,
       selected: normal,
       levels,
     };

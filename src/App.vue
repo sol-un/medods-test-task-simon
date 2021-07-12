@@ -6,7 +6,7 @@
     :ref="`tone-${tile.id}`"
   ></audio>
   <div class="app-container">
-    <Header />
+    <h1>Simon Says</h1>
     <div class="ui-container">
       {{ this.message }}
       <Form @start-game="playRound" />
@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import Header from "./components/Header";
 import Tile from "./components/Tile.vue";
 import Form from "./components/Form";
 import engine from "./js/engine.js";
@@ -33,7 +32,6 @@ import engine from "./js/engine.js";
 export default {
   name: "App",
   components: {
-    Header,
     Tile,
     Form,
   },
